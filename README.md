@@ -3,9 +3,7 @@
 Convert Qt Designer `.ui` files into Python using **PySide6**.  
 A lightweight and easy-to-use tool for PySide6 developers.
 
-
 ---
-
 
 ## 🛠 Features
 
@@ -14,9 +12,7 @@ A lightweight and easy-to-use tool for PySide6 developers.
 - Converts `.ui` files to `.py` with a single click
 - Automatically detects file name and destination path
 
-
 ---
-
 
 ## ▶️ How to Use
 
@@ -34,9 +30,19 @@ A lightweight and easy-to-use tool for PySide6 developers.
 4. **Check Status**  
    A status message at the bottom will indicate success or failure.
 
-
 ---
 
+## 🗺 Version Roadmap
+
+| Version | Status | Planned Features |
+|---------|--------|------------------|
+| ✅ v1.0  | Released | Basic PySide6 GUI, single `.ui` to `.py` conversion |
+| ⬜ v1.1  | Planned  | Error handling, icon/taskbar visibility fix |
+| ⬜ v1.2  | Planned  | Drag-and-drop support for `.ui` files |
+| ⬜ v1.3  | Planned  | Multi-file batch conversion |
+| ⬜ v2.0  | Planned  | Dark mode, user settings panel |
+
+---
 
 ## 📄 License
 

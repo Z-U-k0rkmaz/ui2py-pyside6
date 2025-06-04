@@ -24,9 +24,9 @@ A lightweight and easy-to-use tool for PySide6 developers.
    Click the `Select File` button and choose your `.ui` file created in Qt Designer.
 
 2. **Choose Destination Folder** *(optional)*  
-   If you want to save the output in a different location, click `Destination Folder`.  
-   Otherwise, the `.py` file will be saved in the same directory as the `.ui` file  
-   with the default name format `ui_filename.py`.
+   Otherwise, the `.py` file will be saved in the same directory as the `.ui` file,  
+   with the default name format `ui_<filename>.py`, based on the name of your selected `.ui` file.
+
 
 3. **Convert**  
    Click the `Convert` button to generate the `.py` file.

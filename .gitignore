@@ -1,0 +1,42 @@
+# virtual environment directory
+venv/
+
+# Qt Designer tmp files
+*.autosave
+
+# PyInstaller build directories
+build/
+dist/
+*.spec
+
+# build artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE files
+.vscode/
+*.code-workspace
+
+# OS system files
+.DS_Store
+Thumbs.db
+
+# output files
+*.exe
+*.ico
+
+# Logs & misc
+*.log
+*.tmp
+
+# PyInstaller cache
+*.manifest
+*.dll
+*.egg-info/
+
+# PyInstaller build files and directories
+build/
+dist/
+*.spec

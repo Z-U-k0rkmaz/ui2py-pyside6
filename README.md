@@ -37,7 +37,7 @@ A lightweight and easy-to-use tool for PySide6 developers.
 | Version | Status | Planned Features |
 |---------|--------|------------------|
 | ✅ v1.0  | Released | Basic PySide6 GUI, single `.ui` to `.py` conversion |
-| ⬜ v1.1  | Planned  | Error handling, icon/taskbar visibility fix |
+| ✅ v1.1  | Released | Error handling, icon/taskbar visibility fix |
 | ⬜ v1.2  | Planned  | Drag-and-drop support for `.ui` files |
 | ⬜ v1.3  | Planned  | Multi-file batch conversion |
 | ⬜ v2.0  | Planned  | Dark mode, user settings panel |

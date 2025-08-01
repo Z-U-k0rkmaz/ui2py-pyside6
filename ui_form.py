@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.1
+## Created by: Qt User Interface Compiler version 6.7.3
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -23,20 +23,20 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(550, 201)
+        MainWindow.resize(562, 201)
         self.Exit = QAction(MainWindow)
         self.Exit.setObjectName(u"Exit")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.BtnConvert = QPushButton(self.centralwidget)
         self.BtnConvert.setObjectName(u"BtnConvert")
-        self.BtnConvert.setGeometry(QRect(30, 100, 101, 31))
+        self.BtnConvert.setGeometry(QRect(30, 100, 111, 31))
         self.BtnSelectFile = QPushButton(self.centralwidget)
         self.BtnSelectFile.setObjectName(u"BtnSelectFile")
-        self.BtnSelectFile.setGeometry(QRect(30, 20, 101, 31))
+        self.BtnSelectFile.setGeometry(QRect(30, 20, 111, 31))
         self.LblFileName = QLabel(self.centralwidget)
         self.LblFileName.setObjectName(u"LblFileName")
-        self.LblFileName.setGeometry(QRect(140, 20, 241, 31))
+        self.LblFileName.setGeometry(QRect(150, 20, 231, 31))
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(30, 140, 51, 31))
@@ -45,19 +45,19 @@ class Ui_MainWindow(object):
         self.LblStatus.setGeometry(QRect(90, 140, 161, 31))
         self.BtnExit = QPushButton(self.centralwidget)
         self.BtnExit.setObjectName(u"BtnExit")
-        self.BtnExit.setGeometry(QRect(420, 140, 101, 31))
+        self.BtnExit.setGeometry(QRect(440, 140, 101, 31))
         self.BtnSelectDestinationFolder = QPushButton(self.centralwidget)
         self.BtnSelectDestinationFolder.setObjectName(u"BtnSelectDestinationFolder")
-        self.BtnSelectDestinationFolder.setGeometry(QRect(30, 60, 101, 31))
+        self.BtnSelectDestinationFolder.setGeometry(QRect(30, 60, 111, 31))
         font = QFont()
         font.setPointSize(8)
         self.BtnSelectDestinationFolder.setFont(font)
         self.LblDestinationName = QLabel(self.centralwidget)
         self.LblDestinationName.setObjectName(u"LblDestinationName")
-        self.LblDestinationName.setGeometry(QRect(140, 60, 401, 31))
+        self.LblDestinationName.setGeometry(QRect(150, 60, 401, 31))
         self.LblFinalPath = QLabel(self.centralwidget)
         self.LblFinalPath.setObjectName(u"LblFinalPath")
-        self.LblFinalPath.setGeometry(QRect(140, 100, 391, 31))
+        self.LblFinalPath.setGeometry(QRect(150, 100, 381, 31))
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")

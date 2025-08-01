@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>550</width>
+    <width>562</width>
     <height>201</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>30</x>
       <y>100</y>
-      <width>101</width>
+      <width>111</width>
       <height>31</height>
      </rect>
     </property>
@@ -32,7 +32,7 @@
      <rect>
       <x>30</x>
       <y>20</y>
-      <width>101</width>
+      <width>111</width>
       <height>31</height>
      </rect>
     </property>
@@ -43,9 +43,9 @@
    <widget class="QLabel" name="LblFileName">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>150</x>
       <y>20</y>
-      <width>241</width>
+      <width>231</width>
       <height>31</height>
      </rect>
     </property>
@@ -82,7 +82,7 @@
    <widget class="QPushButton" name="BtnExit">
     <property name="geometry">
      <rect>
-      <x>420</x>
+      <x>440</x>
       <y>140</y>
       <width>101</width>
       <height>31</height>
@@ -97,7 +97,7 @@
      <rect>
       <x>30</x>
       <y>60</y>
-      <width>101</width>
+      <width>111</width>
       <height>31</height>
      </rect>
     </property>
@@ -113,7 +113,7 @@
    <widget class="QLabel" name="LblDestinationName">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>150</x>
       <y>60</y>
       <width>401</width>
       <height>31</height>
@@ -126,9 +126,9 @@
    <widget class="QLabel" name="LblFinalPath">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>150</x>
       <y>100</y>
-      <width>391</width>
+      <width>381</width>
       <height>31</height>
      </rect>
     </property>

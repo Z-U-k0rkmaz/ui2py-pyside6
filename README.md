@@ -46,4 +46,4 @@ A lightweight and easy-to-use tool for PySide6 developers.
 
 ## 📄 License
 
-MIT © 2025 Ümit Korkmaz
+MIT © 2025 umitkrkmz

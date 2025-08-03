@@ -92,7 +92,7 @@ python ui2py.py
 | ✅ v1.1  | Released | Error handling, icon/taskbar visibility fix |
 | ✅ v1.2  | Released  | Drag-and-drop support for `.ui` files |
 | ⬜ v1.3  | Planned  | Multi-file batch conversion |
-| ⬜ v2.0  | Planned  | Dark mode, user settings panel |
+| ⬜ v2.0  | Planned  | Automatic dark/light mode, user settings panel |
 
 
 ## 📄 License

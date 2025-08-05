@@ -217,6 +217,16 @@
      </layout>
     </widget>
    </widget>
+   <widget class="QListWidget" name="ListSelectedFiles">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>10</y>
+      <width>191</width>
+      <height>151</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="Exit">

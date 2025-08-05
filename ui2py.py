@@ -4,11 +4,11 @@ import shutil
 from pathlib import Path
 import ctypes
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox,QSizePolicy
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QSizePolicy
 from PySide6.QtGui import QIcon, QFontMetrics
-from PySide6.QtCore import QTimer, Qt
+from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QSize
 
-from ui_form import Ui_MainWindow  
+from ui_form import Ui_MainWindow
 
 import subprocess
 
@@ -20,51 +20,68 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         
-        self._setup_output_row_layout()
-        self._init_output_row_widgets()
-        self._clear_output_row()
+        self.window_width_anim = QPropertyAnimation(self, b"size")
+        self.window_width_anim.setDuration(300)
+        self.window_width_anim.setEasingCurve(QEasingCurve.InOutCubic)
 
-        
+        self.ui.ListSelectedFiles.setVisible(False)
+
+        self._setup_output_row_layout()
+        self._init_output_row_widgets()  # --- Outlook ---
+        self._clear_output_row() # Not visible/grey at startup
+
         # --- Spacing inside the path line ---
         self.ui.horizontalLayout_2.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.ui.horizontalLayout_2.setSpacing(0)
         self.ui.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
 
-        # --- Outlook ---
-        self._init_output_row_widgets()
+        self.ui.EdBase.textChanged.connect(lambda _: self._fit_to_text(self.ui.EdBase))
 
-        # EdBase adjusts width to text as you type
-        self.ui.EdBase.textChanged.connect(lambda _ : self._fit_to_text(self.ui.EdBase))
-
-        self.setAcceptDrops(True)  # drag-and-drop support
-
+        self.setAcceptDrops(True)
         self.setWindowTitle("PySide6 UI to PY Converter")
-        self.setFixedSize(562, 201)
+        self.setMinimumSize(562, 201)
+        self.setMaximumSize(770, 201)
         self.setWindowIcon(QIcon(ICON_PATH))
 
-        self.file_path = ''
+        self.file_paths: list[str] = []
         self.file_name = ''
         self.file_directory = ''
 
-        # Not visible/grey at startup
-        self._clear_output_row()
-        
-        
         self.ui.EdBase.setPlaceholderText("file_name")
         self.ui.EdBase.setToolTip("Output file name — click to edit")
         self.ui.EdBase.setCursor(Qt.IBeamCursor)
         for ro in (self.ui.EdPrefix, self.ui.EdSuffix):
             ro.setCursor(Qt.ArrowCursor)
-            
+
         self.setTabOrder(self.ui.BtnConvert, self.ui.EdBase)
 
-        # Signals
+        # Button signals
         self.ui.BtnConvert.clicked.connect(self.convert)
         self.ui.BtnSelectFile.clicked.connect(self.select_file)
         self.ui.BtnSelectDestinationFolder.clicked.connect(self.select_folder)
         self.ui.BtnExit.clicked.connect(self.exit)
 
 #region ---------------- helpers ----------------
+    def _animate_list(self, show=False, hide=False):
+        self.window_width_anim.stop()
+        try:
+            self.window_width_anim.finished.disconnect()  
+        except TypeError:
+            pass  
+
+        if show:
+            self.ui.ListSelectedFiles.setVisible(True)
+            self.ui.ListSelectedFiles.setFixedHeight(151)
+            self.window_width_anim.setStartValue(QSize(562, 201))
+            self.window_width_anim.setEndValue(QSize(770, 201))
+            self.window_width_anim.start()
+
+        elif hide:
+            self.window_width_anim.setStartValue(QSize(self.width(), 201))
+            self.window_width_anim.setEndValue(QSize(562, 201))
+            self.window_width_anim.start()
+            self.window_width_anim.finished.connect(lambda: self.ui.ListSelectedFiles.setVisible(False))
+
     def _setup_output_row_layout(self):
         """Reset the layout spacing of the row containing the three QLineEdits."""
         lay = self.ui.horizontalLayout_2
@@ -79,17 +96,15 @@ class MainWindow(QMainWindow):
             le.setTextMargins(0, 0, 0, 0)
             le.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
             le.setMinimumWidth(0)
-
-        # Prefix/Suffix: not clickable/editable (display only)
-        for ro in (self.ui.EdPrefix, self.ui.EdSuffix):
+        for ro in (self.ui.EdPrefix, self.ui.EdSuffix): # Prefix/Suffix: not clickable/editable (display only)
             ro.setReadOnly(True)
             ro.setFocusPolicy(Qt.NoFocus)
             ro.setContextMenuPolicy(Qt.NoContextMenu)
             ro.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-
+        
         # EdBase: user modifiable
         self.ui.EdBase.setReadOnly(False)
-
+        
         # Recalculate width as base changes
         self.ui.EdBase.textChanged.connect(lambda _=None: self._fit_to_text(self.ui.EdBase))
 
@@ -128,186 +143,190 @@ class MainWindow(QMainWindow):
         self._fit_to_text(self.ui.EdSuffix)
 #endregion
 
-    
 #region Catch the drag event and triggering the file selection function
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
-            urls = event.mimeData().urls()
-            
-            if urls and urls[0].toLocalFile().endswith('.ui'):
+            if any(url.toLocalFile().endswith('.ui') for url in event.mimeData().urls()):
                 event.acceptProposedAction()
             else:
                 event.ignore()
         else:
             event.ignore()
-    
+
     def dropEvent(self, event):
-        if event.mimeData().hasUrls():
-            file_path = event.mimeData().urls()[0].toLocalFile()
-            if file_path.endswith('.ui'):
-                self.file_path = file_path
-                self.file_name = os.path.basename(self.file_path)
-                self.file_directory = os.path.dirname(self.file_path)
-                
-                self.ui.LblFileName.setText(self._norm(self.file_name))
-                self.ui.LblDestinationName.setText(self._norm(self.file_directory))
-                 
-                self._refresh_output_row(set_default_name=True)
-                self.ui.LblStatus.setText('File dropped and ready for conversion')
-    
+        if not event.mimeData().hasUrls():
+            event.ignore()
+            return
+
+        urls = event.mimeData().urls()
+        ui_files = [url.toLocalFile() for url in urls if url.toLocalFile().endswith('.ui')]
+
+        if not ui_files:
+            self.ui.LblStatus.setText('No valid .ui files dropped')
+            event.ignore()
+            return
+
+        self.file_paths = ui_files
+        self.file_directory = os.path.dirname(ui_files[0])
+
+        if len(ui_files) == 1:
+            self.file_name = os.path.basename(ui_files[0])
+            self.file_path = ui_files[0]
+            self.ui.LblFileName.setText(self._norm(self.file_name))
+            self._refresh_output_row(set_default_name=True)
+            self._animate_list(hide=True)
+        else:
+            self.ui.LblFileName.setText(f"{len(ui_files)} files dropped")
+            self.ui.ListSelectedFiles.clear()
+            for f in ui_files:
+                self.ui.ListSelectedFiles.addItem(os.path.basename(f))
+            self._clear_output_row()
+            self._animate_list(show=True)
+
+        self.ui.LblDestinationName.setText(self._norm(self.file_directory))
+        self.ui.LblStatus.setText('Files dropped and ready for conversion')
+        event.acceptProposedAction()
+
 #endregion
-     
+
     def convert(self):
         # Pre checks
-        if not self.file_path or not os.path.isfile(self.file_path):
-            QMessageBox.warning(self, "Missing file", "Please select a valid .ui file first.")
-            self.ui.LblStatus.setText('Please select a valid .ui file first')
+        if not self.file_paths or not all(os.path.isfile(f) for f in self.file_paths):
+            QMessageBox.warning(self, "Missing file", "Please select valid .ui files first.")
+            self.ui.LblStatus.setText('Please select valid .ui files')
             return
 
         if not self.file_directory or not os.path.isdir(self.file_directory):
             QMessageBox.warning(self, "Destination folder", "Please select a valid destination folder.")
             self.ui.LblStatus.setText('Please select a valid destination folder')
             return
-        
+
         if not os.access(self.file_directory, os.W_OK):
             self.ui.LblStatus.setText('No permission to write file')
             return
 
-        
         uic_path = shutil.which("pyside6-uic")
         if not uic_path:
             self.ui.LblStatus.setText('pyside6-uic not found on PATH')
-            QMessageBox.critical(self, "Tool missing",
-                                "pyside6-uic was not found. Make sure PySide6 tools are installed and on PATH.")
+            QMessageBox.critical(self, "Tool missing", "pyside6-uic was not found. Make sure PySide6 tools are installed and on PATH.")
             return
-        
-        
-        # output file name
-        base_text = self.ui.EdBase.text().strip()
-        if not base_text:
-            base_text = f"ui_{os.path.splitext(self.file_name)[0]}"
-        
-        if base_text.lower().endswith(".py"):
-            base_text = base_text[:-3]
-        
-        output_file = self._norm(os.path.join(
-            self.file_directory, base_text + ".py"
-        ))
 
-        self.ui.LblStatus.setText('Starting conversion process...')
+        # Prevent instant console opening and closing in Windows
+        startupinfo = None
+        creationflags = 0
+        if sys.platform.startswith("win"):
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            creationflags = subprocess.CREATE_NO_WINDOW
 
-        try:
-            # Prevent instant console opening and closing in Windows
-            startupinfo = None
-            creationflags = 0
-            if sys.platform.startswith("win"):
-                startupinfo = subprocess.STARTUPINFO()
-                startupinfo.dwFlags |=subprocess.STARTF_USESHOWWINDOW
-                creationflags = subprocess.CREATE_NO_WINDOW
-            
-            
-            result = subprocess.run(
-                [uic_path, self.file_path, "-o", output_file],
-                check=True,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-                startupinfo=startupinfo, # windows
-                creationflags=creationflags # windows
-            )
-            QTimer.singleShot(1500, lambda: self.ui.LblStatus.setText('Conversion completed'))
-            
-        except subprocess.CalledProcessError as e:
-            details = (e.stderr or e.stdout or '').strip()
-            if not details:
-                details = f"Conversion failed (exit code {e.returncode})."
-            
-            self.ui.LblStatus.setText(details if len(details) < 200 else details[:200] + '...')
-        except PermissionError:
-            self.ui.LblStatus.setText('No permission to write file')
-        except Exception as e:
-            self.ui.LblStatus.setText(f'Unexpected error: {str(e)}')
+        multiple = len(self.file_paths) > 1
+        errors = []
 
+        for file in self.file_paths:
+            fname = os.path.basename(file)
+            stem = Path(fname).stem
+            out_base = self.ui.EdBase.text().strip() if not multiple else f"ui_{stem}"
+            if out_base.lower().endswith('.py'):
+                out_base = out_base[:-3]
 
-     
-    
+            output_file = self._norm(os.path.join(self.file_directory, out_base + ".py"))
+
+            try:
+                subprocess.run(
+                    [uic_path, file, "-o", output_file],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    startupinfo=startupinfo,
+                    creationflags=creationflags
+                )
+            except subprocess.CalledProcessError as e:
+                msg = (e.stderr or e.stdout or '').strip()
+                errors.append(f"{fname}: {msg}")
+            except Exception as e:
+                errors.append(f"{fname}: {str(e)}")
+
+        if errors:
+            self.ui.LblStatus.setText(f"{len(errors)} error(s) occurred. Check console.")
+            for err in errors:
+                print(err)
+        else:
+            self.ui.LblStatus.setText('Conversion completed')
+
     def select_file(self):
-        self.file_path, _ = QFileDialog.getOpenFileName(
-            self, 'Open file', '', 'UI Files (*.ui)'
-        )
-
-        if not self.file_path:
+        files, _ = QFileDialog.getOpenFileNames(self, 'Select .ui files', '', 'UI Files (*.ui)')
+        
+        if not files:
             self.ui.LblStatus.setText('No file selected')
             return
-        
-        if not self.file_path.endswith('.ui'):
-            self.ui.LblStatus.setText('Please select a .ui file!')
-            self.file_path = ''
+
+        self.file_paths = [f for f in files if f.endswith('.ui')]
+        if not self.file_paths:
+            self.ui.LblStatus.setText('No valid .ui files selected')
             return
 
+        self.ui.ListSelectedFiles.clear()
+        if len(self.file_paths) == 1:
+            self.file_path = self.file_paths[0]
+            self.file_name = os.path.basename(self.file_path)
+            self.ui.LblFileName.setText(self._norm(self.file_name))
+            self._refresh_output_row(set_default_name=True)
+            self._animate_list(hide=True)
+        else:
+            self.ui.LblFileName.setText(f"{len(self.file_paths)} files selected")
+            for f in self.file_paths:
+                self.ui.ListSelectedFiles.addItem(os.path.basename(f))
+            self._clear_output_row()
+            self._animate_list(show=True)
 
-        self.file_name = os.path.basename(self.file_path)
-        self.file_directory = os.path.dirname(self.file_path)
-
-        self.ui.LblFileName.setText(self._norm(self.file_name))
+        self.file_directory = os.path.dirname(self.file_paths[0])
         self.ui.LblDestinationName.setText(self._norm(self.file_directory))
-        
-        self._refresh_output_row(set_default_name=True)
-        self.ui.LblStatus.setText('Selected file')  
+        self.ui.LblStatus.setText('Files ready for conversion')
 
-  
     def select_folder(self):
         self.file_directory = QFileDialog.getExistingDirectory(self, 'Select folder')
+        if not self.file_directory:
+            self.ui.LblStatus.setText('No folder selected')
+            return
+
         self.ui.LblDestinationName.setText(self._norm(self.file_directory))
-        
         self._refresh_output_row(set_default_name=False)
         self.ui.LblStatus.setText('Selected folder')
-        
-    
+
     def exit(self):
         self.close()
-    
-    
+
     def _norm(self, p: str) -> str:
         return os.path.normpath(p)
 
 # ------------------------------- main -------------------------------
-
-def main():    
+def main():
     app = QApplication(sys.argv)
-    
     load_qss(app=app)
-    
     app.setQuitOnLastWindowClosed(True)
-    
+
     window = MainWindow()
-    
     if sys.platform.startswith("win"):
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("ui2py.pyside6")
-        
-    
+
     window.show()
     sys.exit(app.exec())
 
-
 def rsrc(p: str) -> str:
-    base = getattr(sys, "_MEIPASS", Path(__file__).parent) 
+    base = getattr(sys, "_MEIPASS", Path(__file__).parent)
     return str(Path(base) / "assets" / p)
-
 
 def load_qss(app, filename="style.qss"):
     with open(rsrc(f"styles/{filename}"), "r", encoding="utf-8") as f:
         app.setStyleSheet(f.read())
 
-# icon selection according to operating system
+# OS-specific icon
 if sys.platform.startswith("win"):
     ICON_PATH = rsrc("icons/icon.ico")
 else:
-    ICON_PATH = rsrc("icons/icon.png") # other
-
+    ICON_PATH = rsrc("icons/icon.png")
 
 if __name__ == '__main__':
     main()
-    
-    

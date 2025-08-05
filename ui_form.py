@@ -17,8 +17,8 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLineEdit,
-    QMainWindow, QPushButton, QSizePolicy, QStatusBar,
-    QWidget)
+    QListWidget, QListWidgetItem, QMainWindow, QPushButton,
+    QSizePolicy, QStatusBar, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -101,6 +101,9 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.EdSuffix)
 
+        self.ListSelectedFiles = QListWidget(self.centralwidget)
+        self.ListSelectedFiles.setObjectName(u"ListSelectedFiles")
+        self.ListSelectedFiles.setGeometry(QRect(560, 10, 191, 151))
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")

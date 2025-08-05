@@ -304,8 +304,10 @@ class MainWindow(QMainWindow):
 # ------------------------------- main -------------------------------
 def main():
     app = QApplication(sys.argv)
-    load_qss(app=app)
+    load_qss(app, "system")
+    app.styleHints().colorSchemeChanged.connect(lambda _: load_qss(app, "system")) # for system change
     app.setQuitOnLastWindowClosed(True)
+    app.setWindowIcon(QIcon(ICON_PATH))
 
     window = MainWindow()
     if sys.platform.startswith("win"):
@@ -318,9 +320,16 @@ def rsrc(p: str) -> str:
     base = getattr(sys, "_MEIPASS", Path(__file__).parent)
     return str(Path(base) / "assets" / p)
 
-def load_qss(app, filename="style.qss"):
-    with open(rsrc(f"styles/{filename}"), "r", encoding="utf-8") as f:
-        app.setStyleSheet(f.read())
+def load_qss(app: QApplication, mode: str = "system"):
+    if mode == "system":
+        scheme = app.styleHints().colorScheme()
+        is_dark = (scheme == Qt.ColorScheme.Dark)
+    else:
+        is_dark = (mode.lower() == "dark")
+
+    qss_path = Path(rsrc(f"styles/{'dark_style.qss' if is_dark else 'light_style.qss'}"))
+    app.setStyleSheet(qss_path.read_text(encoding="utf-8"))
+
 
 # OS-specific icon
 if sys.platform.startswith("win"):

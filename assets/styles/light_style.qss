@@ -1,31 +1,31 @@
 /* Base background and text */
 QWidget {
-    background-color: #1e1e1e;
-    color: #dddddd;
+    background-color: #f9f9f9;
+    color: #222;
     font-family: "Segoe UI", sans-serif;
     font-size: 8pt;
 }
 
 /* Buttons */
 QPushButton {
-    background-color: #2d2d2d;
-    color: #7abaff;
-    border: 1px solid #444;
+    background-color: #e1e7f0;
+    color: #2b6cb0;
+    border: 1px solid #c3ccd9;
     border-radius: 3px;
     padding: 2.5px 5px;
 }
 
 QPushButton:hover {
-    background-color: #3c3c3c;
+    background-color: #d4e1f5;
 }
 
 QPushButton:pressed {
-    background-color: #2f2f2f;
+    background-color: #c4d2e8;
 }
 
 /* Labels */
 QLabel {
-    color: #dddddd;
+    color: #2b2b2b;
 }
 
 
@@ -35,7 +35,7 @@ QLabel {
     margin: 0;
     border: none;
     background: transparent;
-    color: #aaaaaa;
+    color: #444444;
 }
 
 #EdBase {
@@ -43,16 +43,16 @@ QLabel {
     margin: 0;
     border: none;
     background: transparent;
-    color: #7abaff;
+    color: #2b6cb0;
     font-weight: 600;
-    border-bottom: 1px dashed rgba(122, 186, 255, 0.4);
+    border-bottom: 1px dashed rgba(43, 108, 176, 0.4);
 }
 
 #EdBase:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(77, 94, 112, 0.1);
 }
 
 #EdBase:focus {
-    border-bottom: 2px solid #7abaff;
+    border-bottom: 2px solid #2b6cb0;
     background: transparent;
 }

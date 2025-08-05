@@ -3,17 +3,16 @@
 A simple yet powerful GUI tool to convert one or **multiple** Qt Designer `.ui` files into Python code using **PySide6**.
 
 
+## ✨ What's New (v1.4)
+- ✅ **Automatic dark/light theme support:** The app now adapts to your system's theme preference at launch and updates in real time.
 
-## ✨ What's New (v1.3)
-- ✅ **Multi-file batch conversion:** You can now select and convert multiple `.ui` files at once!
+## 📦 Version (v1.3)
+- **Multi-file batch conversion:** You can now select and convert multiple `.ui` files at once!
   - Drag and drop multiple `.ui` files into the window — they’ll be listed automatically.
   - Each file is converted into `ui_<filename>.py` by default.
-  
-- ✅ **Dynamic UI resizing:** The window expands to show a file list when multiple files are dropped.
-
-- ✅ **Smart output naming:** For batch conversion, each file is auto-named. For single file mode, you can manually edit the name.
-
-- ✅ **Improved status feedback:** Clear, context-aware messages for both single and multiple file workflows.
+- **Dynamic UI resizing:** The window expands to show a file list when multiple files are dropped.
+- **Smart output naming:** For batch conversion, each file is auto-named. For single file mode, you can manually edit the name.
+- **Improved status feedback:** Clear, context-aware messages for both single and multiple file workflows.
 
 ## 📦 Version (v1.2)
 - **Drag & drop** `.ui` files directly into the window — instantly ready for conversion.
@@ -116,7 +115,7 @@ python ui2py.py
 | ✅ v1.1  | Released | Error handling, icon/taskbar visibility fix |
 | ✅ v1.2  | Released | Drag-and-drop support for `.ui` files |
 | ✅ v1.3  | Released | Multi-file batch conversion |
-| ⬜ v1.4  | Planned  | Automatic dark/light mode |
+| ✅ v1.4  | Released  | Automatic dark/light mode |
 
 
 ## 📄 License

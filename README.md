@@ -1,48 +1,57 @@
 # UI2Py – PySide6 Edition
 
+[![PySide6](https://img.shields.io/badge/PySide6-6.7.3-blue?logo=qt)](https://www.pyside.org/docs/pyside6/)
+[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A simple yet powerful GUI tool to convert one or **multiple** Qt Designer `.ui` files into Python code using **PySide6**.
 
+![Main Window - Empty](images/main_empty.png)
 
-## ✨ What's New (v1.4)
-- ✅ **Automatic dark/light theme support:** The app now adapts to your system's theme preference at launch and updates in real time.
+## ✨ Features
 
-## 📦 Version (v1.3)
-- **Multi-file batch conversion:** You can now select and convert multiple `.ui` files at once!
-  - Drag and drop multiple `.ui` files into the window — they’ll be listed automatically.
-  - Each file is converted into `ui_<filename>.py` by default.
-- **Dynamic UI resizing:** The window expands to show a file list when multiple files are dropped.
-- **Smart output naming:** For batch conversion, each file is auto-named. For single file mode, you can manually edit the name.
-- **Improved status feedback:** Clear, context-aware messages for both single and multiple file workflows.
+- **Batch Conversion:** Convert multiple `.ui` files to `.py` files at once.
+- **Drag & Drop Support:** Simply drag your `.ui` files onto the application window.
+- **Automatic Naming:** Output files are intelligently named `ui_<filename>.py`.
+- **Customizable Output:** For single files, you can easily edit the output name.
+- **Dark/Light Theme:** The application automatically adapts to your system's theme.
+- **Real-time Status Updates:** Clear feedback during the conversion process.
+- **Cross-Platform:** Works on Windows, macOS, and Linux.
 
-## 📦 Version (v1.2)
-- **Drag & drop** `.ui` files directly into the window — instantly ready for conversion.
-- **Segmented output path** (Prefix / **editable** Base / Suffix) with live width adjustment and custom styling.
-- Smarter output name handling — defaults to `ui_<filename>.py`, no need to type `.py`.
-- Improved error messages:
-  - Checks if `pyside6-uic` is available on PATH.
-  - Clear permission and invalid path messages.
-- On Windows, the conversion runs without showing a console window.
+## ⚡ Quick Setup
 
+This project depends only on `PySide6`.
 
+1. **Create and activate a virtual environment:**
+   ```bash
+   # Create
+   python -m venv .venv
+   # Activate (Windows)
+   .venv\Scripts\activate
+   # Activate (macOS/Linux)
+   source .venv/bin/activate
+   ```
+
+2. **Install the dependency:**
+   ```bash
+   pip install PySide6
+   ```
+
+3. **Run the app:**
+   ```bash
+   python ui2py.py
+   ```
 
 ## ▶️ Usage
 
 1.  **Select File(s)** — Click *Select File* or drag & drop one or more `.ui` files into the window.
+2.  **(Optional)** Select a destination folder. By default, it's the same folder as the input file(s).
+3.  **(Optional, single file only)** Edit the output name.
+4.  Click **Convert**. Status updates will appear at the bottom.
 
-2. **(Optional)** Select Destination Folder.
-
-3. **(Optional, single file only)** Edit Output Name — Click the middle segment (Base) to rename it.
-
-4. Click **Convert**.
-
-Status updates will appear at the bottom.
 > 💡 *Tip:* When converting multiple files, each one is automatically named as `ui_<filename>.py`.
 
-
 ## 🖼 Screenshots
-
-### Main window (no file selected)
-![Main Window - Empty](images/main_empty.png)
 
 ### After file selection (Prefix/Base/Suffix visible)
 ![File Selected](images/file_selected.png)
@@ -65,58 +74,25 @@ Status updates will appear at the bottom.
 ### After conversion multiple files (file created in selected folder)
 ![After Conversion - File in Folder](images/after_multiple_conversion.png)
 
+## 📝 Changelog
+
+- **v1.4:** Added automatic dark/light theme support that adapts to the system in real time.
+- **v1.3:** Introduced multi-file batch conversion and a dynamic UI that resizes to show a file list.
+- **v1.2:** Implemented drag-and-drop support and a smarter, segmented output path editor.
+- **v1.1:** Added better error handling and fixed taskbar visibility.
+- **v1.0:** Initial release with basic single-file conversion.
 
 ## 🆘 Troubleshooting
 
-- **`pyside6-uic not found on PATH`**  
-  Make sure PySide6 tools are installed and your terminal can run `pyside6-uic`.
+- **`pyside6-uic not found on PATH`** Make sure PySide6 tools are installed and your terminal can run `pyside6-uic`.
 
-- **No permission to write file**  
-  Choose a folder where you have write permissions (e.g., your home or desktop folder).
+- **No permission to write file** Choose a folder where you have write permissions (e.g., your home or desktop folder).
 
-- **Wrong file type**  
-  Only `.ui` files are supported.
+- **Wrong file type** Only `.ui` files are supported.
 
-- **Mixed file types dropped**  
-  Only `.ui` files will be processed. Other file types will be ignored.
+- **Mixed file types dropped** Only `.ui` files will be processed. Other file types will be ignored.
 
-- **Duplicate output names**  
-  Output names are auto-generated as `ui_<filename>.py`. Ensure all input filenames are unique to avoid overwriting.
-
-
-## ⚡ Quick Setup (all-in-one)
-
-To get started quickly:
-
-```bash
-# Create a virtual environment
-python -m venv .venv
-
-# Activate the environment (Windows)
-.venv\Scripts\activate
-
-# Or activate it (macOS/Linux)
-source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the app
-python ui2py.py
-
-# Tip: You can drag & drop multiple .ui files into the app window.
-```
-
-## 🗺 Version Roadmap
-
-| Version | Status | Planned Features |
-|---------|--------|------------------|
-| ✅ v1.0  | Released | Basic PySide6 GUI, single `.ui` to `.py` conversion |
-| ✅ v1.1  | Released | Error handling, icon/taskbar visibility fix |
-| ✅ v1.2  | Released | Drag-and-drop support for `.ui` files |
-| ✅ v1.3  | Released | Multi-file batch conversion |
-| ✅ v1.4  | Released  | Automatic dark/light mode |
-
+- **Duplicate output names** Output names are auto-generated as `ui_<filename>.py`. Ensure all input filenames are unique to avoid overwriting.
 
 ## 📄 License
 

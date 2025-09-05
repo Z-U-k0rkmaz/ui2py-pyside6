@@ -301,7 +301,7 @@ class MainWindow(QMainWindow):
         self.ui.LblStatus.setText('Selected folder')
 
 
-    # ------------------ delete file from list ------------------
+    # ------------------ delete file from list ------------------ 
     def remove_selected_files(self):
         selected_items = self.ui.ListSelectedFiles.selectedItems()
         if not selected_items:

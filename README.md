@@ -75,7 +75,7 @@ This project depends only on `PySide6`.
 ![After Conversion - File in Folder](images/after_multiple_conversion.png)
 
 ## 📝 Changelog
-
+- **v1.4.1:** Added the ability to remove selected files from the multi-file list.
 - **v1.4:** Added automatic dark/light theme support that adapts to the system in real time.
 - **v1.3:** Introduced multi-file batch conversion and a dynamic UI that resizes to show a file list.
 - **v1.2:** Implemented drag-and-drop support and a smarter, segmented output path editor.

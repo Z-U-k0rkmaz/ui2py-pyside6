@@ -4,9 +4,9 @@ import shutil
 from pathlib import Path
 import ctypes
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QSizePolicy
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QSizePolicy, QMenu
 from PySide6.QtGui import QIcon, QFontMetrics
-from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QSize
+from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QSize, QCoreApplication
 
 from ui_form import Ui_MainWindow
 
@@ -60,6 +60,11 @@ class MainWindow(QMainWindow):
         self.ui.BtnSelectFile.clicked.connect(self.select_file)
         self.ui.BtnSelectDestinationFolder.clicked.connect(self.select_folder)
         self.ui.BtnExit.clicked.connect(self.exit)
+        
+        
+        # Liste etkileşimi için sağ tık menüsü ve klavye kısayolu
+        self.ui.ListSelectedFiles.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.ui.ListSelectedFiles.customContextMenuRequested.connect(self.show_list_context_menu)
 
 #region ---------------- helpers ----------------
     def _animate_list(self, show=False, hide=False):
@@ -295,6 +300,58 @@ class MainWindow(QMainWindow):
         self._refresh_output_row(set_default_name=False)
         self.ui.LblStatus.setText('Selected folder')
 
+
+    # ------------------ delete file from list ------------------
+    def remove_selected_files(self):
+        selected_items = self.ui.ListSelectedFiles.selectedItems()
+        if not selected_items:
+            return
+
+        for item in selected_items:
+            row = self.ui.ListSelectedFiles.row(item)
+            file_name = item.text()
+            file_path = [f for f in self.file_paths if os.path.basename(f) == file_name]
+            if file_path:
+                self.file_paths.remove(file_path[0])
+            
+            self.ui.ListSelectedFiles.takeItem(row)
+            
+        new_count = len(self.file_paths)
+        if new_count == 1:
+            self.ui.LblFileName.setText(self._norm(os.path.basename(self.file_paths[0])))
+            self.file_name = os.path.basename(self.file_paths[0])
+            self._refresh_output_row(set_default_name=True)
+            self._animate_list(hide=True)
+            self.ui.LblStatus.setText('One file left, ready to convert')
+        elif new_count == 0:
+            self.ui.LblFileName.setText(QCoreApplication.translate("MainWindow", u"File not selected yet", None))
+            self.ui.LblStatus.setText(QCoreApplication.translate("MainWindow", u"Please select valid .ui files", None))
+            self._clear_output_row()
+            self._animate_list(hide=True)
+        else:
+            self.ui.LblFileName.setText(f"{new_count} files dropped")
+            self.ui.LblStatus.setText(f"{len(selected_items)} file was deleted from the list.")
+
+    def show_list_context_menu(self, pos):
+        menu = QMenu()
+        remove_action = menu.addAction("Remove Selected File")
+        
+        selected_item = self.ui.ListSelectedFiles.itemAt(pos)
+        if selected_item:
+            action = menu.exec(self.ui.ListSelectedFiles.viewport().mapToGlobal(pos))
+            if action == remove_action:
+                self.remove_selected_files()
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_Delete or event.key() == Qt.Key.Key_Backspace:
+            if self.ui.ListSelectedFiles.isVisible() and self.ui.ListSelectedFiles.hasFocus():
+                self.remove_selected_files()
+        else:
+            super().keyPressEvent(event)
+
+
+
+    # ------------------ exit ------------------
     def exit(self):
         self.close()
 
